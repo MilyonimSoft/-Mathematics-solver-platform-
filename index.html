@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milyonim Softwares | 3D Mega Math App</title>
+<style>
+/* ===== Global Styles ===== */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{overflow:hidden;background:#0f0c29;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);color:white;height:100vh;display:flex;justify-content:center;align-items:center;perspective:1200px;transition:0.5s;}
+h1,h2,h3{margin-bottom:15px;}
+
+/* ===== Floating Symbols ===== */
+.symbol{position:absolute;font-size:2.5rem;opacity:0.15;animation:float 12s infinite;}
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-40px)}100%{transform:translateY(0)}}
+
+/* ===== Hamburger ===== */
+.hamburger{position:fixed;top:20px;left:20px;width:30px;cursor:pointer;z-index:1000;transform-style:preserve-3d;}
+.hamburger span{display:block;height:3px;background:white;margin:6px 0;border-radius:2px;transition:0.4s;}
+.hamburger.active span:nth-child(1){transform:rotateX(45deg) rotate(45deg) translate(6px,6px);}
+.hamburger.active span:nth-child(2){opacity:0;}
+.hamburger.active span:nth-child(3){transform:rotateX(-45deg) rotate(-45deg) translate(6px,-6px);}
+
+/* ===== Menu ===== */
+.menu{position:fixed;left:-260px;top:0;width:260px;height:100%;background: rgba(0,0,0,0.3);backdrop-filter:blur(20px);display:flex;flex-direction:column;padding-top:100px;transition:0.5s;z-index:999;transform-style:preserve-3d;}
+.menu.active{left:0;}
+.menu button{background:none;border:none;color:white;padding:18px;text-align:left;font-size:16px;cursor:pointer;transition:0.3s;backface-visibility:hidden;}
+.menu button:hover{background: rgba(255,255,255,0.15);}
+
+/* ===== Sections ===== */
+.section{display:none;height:100vh;width:100vw;justify-content:center;align-items:center;transform-style:preserve-3d;}
+.section.active{display:flex;}
+
+/* ===== Glass Panels 3D ===== */
+.glass{background: rgba(255,255,255,0.05);backdrop-filter: blur(20px);border-radius:20px;padding:30px;width:90%;max-width:900px;text-align:center;box-shadow:0 20px 40px rgba(0,255,255,0.3);transition:0.5s;transform:translateZ(0);}
+.glass:hover{transform:translateZ(30px) rotateY(2deg) rotateX(2deg);box-shadow:0 40px 60px rgba(0,255,255,0.5);}
+
+/* ===== Calculator ===== */
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px;transform:translateZ(20px);}
+.calc-grid button{padding:15px;font-size:16px;border:none;border-radius:10px;cursor:pointer;background: rgba(255,255,255,0.1);color:white;transition:0.3s;box-shadow:0 4px 6px rgba(0,0,0,0.3);}
+.calc-grid button:hover{background: rgba(0,255,255,0.2);transform:translateZ(10px);}
+
+/* ===== Inputs ===== */
+input, select{padding:10px;margin:5px;border-radius:8px;border:none;width:80px;text-align:center;backface-visibility:hidden;}
+
+/* ===== Canvas ===== */
+canvas{margin-top:20px;border-radius:10px;background: rgba(255,255,255,0.05);}
+
+/* ===== Light Theme ===== */
+body.light{background:#f2f2f2;color:#111;}
+body.light .glass{background: rgba(255,255,255,0.5);color:#111;}
+body.light .menu button{color:#111;}
+body.light .calc-grid button{color:#111;background: rgba(255,255,255,0.3);}
+</style>
+</head>
+<body>
+
+<!-- Floating Symbols -->
+<div class="symbol" style="left:5%">π</div>
+<div class="symbol" style="left:25%">∑</div>
+<div class="symbol" style="left:45%">√</div>
+<div class="symbol" style="left:65%">x²</div>
+<div class="symbol" style="left:85%">θ</div>
+
+<!-- Hamburger -->
+<div class="hamburger" id="hamburger">
+<span></span><span></span><span></span>
+</div>
+
+<!-- Menu -->
+<nav class="menu" id="menu">
+<button onclick="showSection('home')">Home</button>
+<button onclick="showSection('calculator')">Calculator</button>
+<button onclick="showSection('trig')">Trigonometry</button>
+<button onclick="showSection('algebra')">Algebra</button>
+<button onclick="showSection('about')">About</button>
+<button onclick="showSection('settings')">Settings</button>
+</nav>
+
+<!-- Sections -->
+<section id="home" class="section active">
+<div class="glass">
+<h1 data-translate="homeTitle">Milyonim Softwares</h1>
+<div class="logo-box" style="height:120px;width:220px;margin:20px auto;background: rgba(255,255,255,0.1);border-radius:15px;">Logo Placeholder</div>
+<p data-translate="homeDesc">Advanced Multi-Mode Mathematical Platform</p>
+</div>
+</section>
+
+<section id="calculator" class="section">
+<div class="glass">
+<h2 data-translate="calcTitle">Scientific Calculator</h2>
+<input type="text" id="calcInput" placeholder="sin(45)+cos(60)^2">
+<div class="calc-grid">
+<!-- Calculator Buttons -->
+<button onclick="addToCalc('7')">7</button>
+<button onclick="addToCalc('8')">8</button>
+<button onclick="addToCalc('9')">9</button>
+<button onclick="addToCalc('/')">÷</button>
+<button onclick="addToCalc('4')">4</button>
+<button onclick="addToCalc('5')">5</button>
+<button onclick="addToCalc('6')">6</button>
+<button onclick="addToCalc('*')">×</button>
+<button onclick="addToCalc('1')">1</button>
+<button onclick="addToCalc('2')">2</button>
+<button onclick="addToCalc('3')">3</button>
+<button onclick="addToCalc('-')">−</button>
+<button onclick="addToCalc('0')">0</button>
+<button onclick="addToCalc('.')">.</button>
+<button onclick="calculate()">=</button>
+<button onclick="addToCalc('+')">+</button>
+<button onclick="addToCalc('sin(')">sin</button>
+<button onclick="addToCalc('cos(')">cos</button>
+<button onclick="addToCalc('tan(')">tan</button>
+<button onclick="addToCalc('sec(')">sec</button>
+<button onclick="addToCalc('csc(')">csc</button>
+<button onclick="addToCalc('cot(')">cot</button>
+<button onclick="addToCalc('^')">^</button>
+<button onclick="addToCalc('π')">π</button>
+<button onclick="addToCalc('√(')">√</button>
+<button onclick="clearCalc()">C</button>
+</div>
+<div class="result" id="calcResult"></div>
+</div>
+</section>
+
+<section id="trig" class="section">
+<div class="glass">
+<h2 data-translate="trigTitle">Trigonometry</h2>
+<h3 data-translate="trigExpr">Expression Mode</h3>
+<input type="text" id="trigInput" placeholder="sin(45)+cos(60)">
+<button onclick="solveTrig()">Solve</button>
+<div class="result" id="trigResult"></div>
+<canvas id="trigGraph" width="600" height="250"></canvas>
+
+<h3 data-translate="trigDMS">DMS Mode</h3>
+<select id="trigFunc">
+<option value="sin">sin</option>
+<option value="cos">cos</option>
+<option value="tan">tan</option>
+<option value="sec">sec</option>
+<option value="csc">csc</option>
+<option value="cot">cot</option>
+</select>
+<input type="number" id="deg" placeholder="Degree">
+<input type="number" id="min" placeholder="Minute">
+<input type="number" id="sec" placeholder="Second">
+<button onclick="solveDMS()">Solve DMS</button>
+</div>
+</section>
+
+<section id="algebra" class="section">
+<div class="glass">
+<h2 data-translate="algTitle">Algebra</h2>
+<h3 data-translate="sysTitle">System (2x2)</h3>
+<input type="text" id="eq1" placeholder="2x+y=5">
+<input type="text" id="eq2" placeholder="x-y=1">
+<button onclick="solveSystem()">Solve</button>
+
+<h3 data-translate="quadTitle">Quadratic</h3>
+<input type="text" id="quadEq" placeholder="x^2-4x+3=0">
+<button onclick="solveQuadratic()">Solve</button>
+
+<div class="result" id="algResult"></div>
+<canvas id="algGraph" width="600" height="250"></canvas>
+</div>
+</section>
+
+<section id="about" class="section">
+<div class="glass">
+<h2 data-translate="aboutTitle">About</h2>
+<p data-translate="aboutDesc">
+Built by <strong>Safiullah Hasand</strong><br>
+Founder of <strong>Milyonim Softwares</strong><br>
+Author of <em>Journey to Code</em><br>
+Mission: Empower students through advanced mathematical software.
+</p>
+</div>
+</section>
+
+<section id="settings" class="section">
+<div class="glass">
+<h2 data-translate="settingsTitle">Settings</h2>
+<button onclick="toggleTheme()" data-translate="toggleThemeBtn">Toggle Theme</button>
+<h3 data-translate="solMode">Solution Mode</h3>
+<button onclick="setMode('final')" data-translate="finalBtn">Final</button>
+<button onclick="setMode('steps')" data-translate="stepsBtn">Step-by-Step</button>
+<select id="langSelect" onchange="setLanguage(this.value)">
+<option value="en">English</option>
+<option value="ps">Pashto</option>
+<option value="fa">Dari</option>
+<option value="ar">Arabic</option>
+</select>
+</div>
+</section>
+
+<script>
+/* ===== Hamburger + Section Control ===== */
+const hamburger=document.getElementById("hamburger");
+const menu=document.getElementById("menu");
+hamburger.addEventListener("click",()=>{
+hamburger.classList.toggle("active");
+menu.classList.toggle("active");
+});
+function showSection(id){
+document.querySelectorAll(".section").forEach(sec=>sec.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+hamburger.classList.remove("active");
+menu.classList.remove("active");
+}
+
+/* ===== Theme ===== */
+function toggleTheme(){document.body.classList.toggle("light");}
+
+/* ===== Calculator ===== */
+function addToCalc(value){document.getElementById("calcInput").value+=value;}
+function clearCalc(){document.getElementById("calcInput").value="";document.getElementById("calcResult").innerText="";}
+function calculate(){try{const expr=document.getElementById("calcInput").value.replace(/π/g,'Math.PI');const result=eval(expr);document.getElementById("calcResult").innerText=result;}catch(e){document.getElementById("calcResult").innerText="Error";}}
+
+/* ===== Trig ===== */
+function solveTrig(){try{const expr=document.getElementById("trigInput").value.replace(/π/g,'Math.PI');const result=eval(expr);document.getElementById("trigResult").innerText=result;drawTrigGraph(expr);}catch(e){document.getElementById("trigResult").innerText="Error";}}
+function solveDMS(){
+const func=document.getElementById("trigFunc").value;
+const d=Number(document.getElementById("deg").value)||0;
+const m=Number(document.getElementById("min").value)||0;
+const s=Number(document.getElementById("sec").value)||0;
+const dec=d+m/60+s/3600;
+let rad=dec*Math.PI/180;
+let res=0;
+switch(func){case"sin":res=Math.sin(rad);break;case"cos":res=Math.cos(rad);break;case"tan":res=Math.tan(rad);break;case"sec":res=1/Math.cos(rad);break;case"csc":res=1/Math.sin(rad);break;case"cot":res=1/Math.tan(rad);break;}
+document.getElementById("trigResult").innerText=res;}
+
+/* ===== Trig Graph ===== */
+function drawTrigGraph(expr){
+const canvas=document.getElementById("trigGraph");
+const ctx=canvas.getContext("2d");
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.strokeStyle="#00ffff";ctx.beginPath();
+for(let x=0;x<=360;x++){
+const rad=x*Math.PI/180; let y=Math.sin(rad);
+const px=x*(canvas.width/360);
+const py=canvas.height/2-y*100;
+if(x===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);}
+ctx.stroke();
+}
+
+/* ===== Algebra Placeholders ===== */
+function solveSystem(){document.getElementById("algResult").innerText="System solution placeholder";}
+function solveQuadratic(){document.getElementById("algResult").innerText="Quadratic solution placeholder";}
+
+/* ===== Step Mode ===== */
+let stepMode='final';
+function setMode(mode){stepMode=mode; alert('Mode set to '+mode);}
+
+/* ===== Translation ===== */
+const translations={
+en:{homeTitle:"Milyonim Softwares",homeDesc:"Advanced Multi-Mode Mathematical Platform",calcTitle:"Scientific Calculator",trigTitle:"Trigonometry",trigExpr:"Expression Mode",trigDMS:"DMS Mode",algTitle:"Algebra",sysTitle:"System (2x2)",quadTitle:"Quadratic",aboutTitle:"About",aboutDesc:"Built by Safiullah Hasand\nFounder of Milyonim Softwares\nAuthor of Journey to Code\nMission: Empower students through advanced mathematical software.",settingsTitle:"Settings",toggleThemeBtn:"Toggle Theme",solMode:"Solution Mode",finalBtn:"Final",stepsBtn:"Step-by-Step"},
+ps:{homeTitle:"ملیونیم سافټویرونه",homeDesc:"د ریاضي پرمختللې څو حالتونو پلیټ فارم",calcTitle:"ساینسي کیلکولیټر",trigTitle:"مثلثیات",trigExpr:"د عبارت حالت",trigDMS:"DMS حالت",algTitle:"الجبرا",sysTitle:"سیسټم (2x2)",quadTitle:"مربع",aboutTitle:"زما په اړه",aboutDesc:"جوړ شوی د صفي الله حسن لخوا\nملیونیم سافټویرونه بنسټ ایښودونکی\nد Journey to Code لیکوال\nموخه: زده کونکو ته د پرمختللې ریاضي سافټویر چمتو کول",settingsTitle:"تنظیمات",toggleThemeBtn:"تیم بدلول",solMode:"د حل حالت",finalBtn:"وروستی",stepsBtn:"ګام په ګام"},
+fa:{homeTitle:"Milyonim Softwares",homeDesc:"پلتفرم پیشرفته ریاضی چند حالتی",calcTitle:"ماشین حساب علمی",trigTitle:"مثلثات",trigExpr:"حالت عبارت",trigDMS:"حالت DMS",algTitle:"جبر",sysTitle:"سیستم (2x2)",quadTitle:"معادله درجه دو",aboutTitle:"درباره من",aboutDesc:"ساخته شده توسط صفي الله حسن\nبنیانگذار Milyonim Softwares\nنویسنده Journey to Code\nهدف: توانمندسازی دانش آموزان با نرم افزار پیشرفته ریاضی",settingsTitle:"تنظیمات",toggleThemeBtn:"تغییر تم",solMode:"حالت حل",finalBtn:"نهایی",stepsBtn:"مرحله به مرحله"},
+ar:{homeTitle:"Milyonim Softwares",homeDesc:"منصة رياضية متقدمة متعددة الأوضاع",calcTitle:"الحاسبة العلمية",trigTitle:"مثلثات",trigExpr:"وضع التعبير",trigDMS:"وضع DMS",algTitle:"الجبر",sysTitle:"النظام (2x2)",quadTitle:"المعادلة التربيعية",aboutTitle:"حول",aboutDesc:"تم إنشاؤه بواسطة صفي الله حسن\nمؤسس Milyonim Softwares\nمؤلف Journey to Code\nالهدف: تمكين الطلاب من خلال برامج رياضية متقدمة",settingsTitle:"الإعدادات",toggleThemeBtn:"تبديل الوضع",solMode:"وضع الحل",finalBtn:"نهائي",stepsBtn:"خطوة بخطوة"}};
+function setLanguage(lang){
+document.querySelectorAll('[data-translate]').forEach(el=>{
+const key=el.getAttribute('data-translate');
+if(translations[lang] && translations[lang][key]) el.innerText=translations[lang][key];
+}
+);}
+</script>
+</body>
+</html>
